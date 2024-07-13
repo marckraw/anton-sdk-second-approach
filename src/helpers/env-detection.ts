@@ -1,10 +1,10 @@
 export const isBrowser =
   typeof window !== "undefined" && typeof window.document !== "undefined";
 
-export const warnIfBrowser = (modelName: string) => {
+export const throwErrorIfBrowser = (modelName: string) => {
   if (isBrowser) {
-    console.warn(
-      `${modelName} doesn't work directly in browser environments due to CORS restrictions. Consider using a server-side proxy.`,
+    throw new Error(
+      `${modelName} can't be used directly in browser environments due to CORS restrictions. Use a server-side proxy.`,
     );
   }
 };

@@ -1,6 +1,6 @@
 import axios, { AxiosInstance } from "axios";
 import { AIModel, Message } from "./base";
-import { isBrowser, warnIfBrowser } from "../helpers/env-detection";
+import { isBrowser, throwErrorIfBrowser } from "../helpers/env-detection";
 
 export class AnthropicModel implements AIModel {
   private api: AxiosInstance;
@@ -8,9 +8,7 @@ export class AnthropicModel implements AIModel {
 
   constructor(private apiKey: string) {
     if (isBrowser) {
-      throw new Error(
-        `AnthropicModel can't be used directly in browser environments due to CORS restrictions. Use a server-side proxy.`,
-      );
+      throwErrorIfBrowser("AnthropicModel");
     }
 
     this.api = axios.create({

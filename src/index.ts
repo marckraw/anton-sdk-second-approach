@@ -9,7 +9,11 @@ if (typeof window !== "undefined") {
 export class AntonSDK {
   private model: AIModel;
   constructor(config: { type: ModelType; apiKey: string }) {
-    this.model = ModelFactory.create(config.type, config.apiKey);
+    try {
+      this.model = ModelFactory.create(config.type, config.apiKey);
+    } catch (e) {
+      console.error(e);
+    }
   }
   async chat(messages: Message[]): Promise<string> {
     return this.model.chat(messages);
