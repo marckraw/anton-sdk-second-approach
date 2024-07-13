@@ -38,7 +38,9 @@ jobs:
       - name: Release to npm (feature branch)
         if: github.ref != 'refs/heads/master' && github.ref != 'refs/heads/beta' && steps.changesets.outputs.hasChangesets == 'false'
         run: |
-          npm version prerelease --preid=feature-${GITHUB_SHA::8}  
+          git config --global user.email "github-actions@github.com"  
+          git config --global user.name "GitHub Actions"  
+          npm version prerelease --preid=feature-${GITHUB_SHA::8} -m "Bump version to %s [skip ci]"  
           npm publish --tag feature
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
