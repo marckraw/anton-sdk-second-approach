@@ -26,6 +26,10 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
+      - name: Setup Beta Release
+        if: github.ref == 'refs/heads/beta'
+        run: npx changeset pre enter beta
+
       - name: Create Release Pull Request or Publish to npm
         id: changesets
         uses: changesets/action@v1
@@ -35,21 +39,30 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
 
-      - name: Release to npm (feature branch)
-        if: github.ref != 'refs/heads/master' && github.ref != 'refs/heads/beta' && steps.changesets.outputs.hasChangesets == 'false'
+      - name: Release Beta to npm
+        if: github.ref == 'refs/heads/beta' && steps.changesets.outputs.hasChangesets == 'false'
         run: |
-          git config --global user.email "github-actions@github.com"  
-          git config --global user.name "GitHub Actions"  
-
           npm config set registry https://registry.npmjs.org/  
           npm config list  
           npm whoami  
+          
+          npm version prerelease --preid=beta -m "Bump version to %s [skip ci]"  
+          npm publish --tag beta --access public
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
 
+      - name: Release Feature to npm
+        if: github.ref != 'refs/heads/master' && github.ref != 'refs/heads/beta' && steps.changesets.outputs.hasChangesets == 'false'
+        run: |
+          npm config set registry https://registry.npmjs.org/  
+          npm config list  
+          npm whoami  
+          
           PACKAGE_VERSION=$(node -p "require('./package.json').version")  
           FEATURE_VERSION="${PACKAGE_VERSION}-feature-${GITHUB_SHA::8}"  
-
+          
           npm version ${FEATURE_VERSION} --no-git-tag-version  
-
           npm publish --tag feature --access public
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
