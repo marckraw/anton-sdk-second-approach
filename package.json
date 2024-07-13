@@ -15,7 +15,8 @@
     "test": "vitest",
     "test:run": "vitest run",
     "dev": "rollup -c rollup.config.mjs -w",
-    "start": "node --env-file=.env dist/bin/index.js"
+    "start": "node --env-file=.env dist/bin/index.js",
+    "release": "changeset publish"
   },
   "keywords": [],
   "author": "",
