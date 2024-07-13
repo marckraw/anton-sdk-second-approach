@@ -10,7 +10,7 @@ export class AnthropicModel implements AIModel {
     if (isBrowser) {
       throwErrorIfBrowser("AnthropicModel");
     }
-    console.log("some yolo changes");
+    console.log("mehh");
 
     this.api = axios.create({
       baseURL: this.baseUrl,
