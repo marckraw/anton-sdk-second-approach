@@ -45,8 +45,19 @@ jobs:
           npm config set registry https://registry.npmjs.org/  
           npm config list  
           npm whoami  
-          
-          npm version prerelease --preid=beta -m "Bump version to %s [skip ci]"  
+
+          # Get current version  
+          CURRENT_VERSION=$(node -p "require('./package.json').version")  
+
+          # If it's already a beta version, increment the beta number  
+          if [[ $CURRENT_VERSION == *"-beta."* ]]; then  
+            npm version prerelease --preid=beta -m "Bump version to %s [skip ci]"  
+          else  
+            # If it's not a beta version, start a new beta  
+            npm version prepatch --preid=beta -m "Bump version to %s [skip ci]"  
+          fi  
+
+          # Publish the new beta version  
           npm publish --tag beta --access public
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
