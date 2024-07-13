@@ -38,7 +38,19 @@ jobs:
       - name: Release to npm (feature branch)
         if: github.ref != 'refs/heads/master' && github.ref != 'refs/heads/beta' && steps.changesets.outputs.hasChangesets == 'false'
         run: |
-          npm version prerelease --preid=feature-${GITHUB_SHA::8}  
-          npm publish --tag feature
+          git config --global user.email "github-actions@github.com"  
+          git config --global user.name "GitHub Actions"  
+
+          npm config set registry https://registry.npmjs.org/  
+          npm config list  
+          npm whoami  
+
+          PACKAGE_VERSION=$(node -p "require('./package.json').version")  
+          FEATURE_VERSION="${PACKAGE_VERSION}-feature-${GITHUB_SHA::8}"  
+
+          npm version ${FEATURE_VERSION} --no-git-tag-version  
+
+          npm publish --tag feature --access public
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
