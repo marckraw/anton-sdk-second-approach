@@ -1,6 +1,6 @@
 {
   "name": "@mrck-labs/anton-sdk-second-approach",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "description": "",
   "main": "dist/anton-sdk.cjs.js",
   "module": "dist/anton-sdk.esm.js",
