@@ -40,7 +40,17 @@ jobs:
         run: |
           git config --global user.email "github-actions@github.com"  
           git config --global user.name "GitHub Actions"  
+          
+          git status  
+          
+          if [[ -n $(git status -s) ]]; then  
+            git add .  
+            git commit -m "Prepare for feature release [skip ci]"  
+          fi  
+          
           npm version prerelease --preid=feature-${GITHUB_SHA::8} -m "Bump version to %s [skip ci]"  
+          git push --follow-tags  
           npm publish --tag feature
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
