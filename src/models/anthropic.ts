@@ -1,11 +1,13 @@
 import axios, { AxiosInstance } from "axios";
 import { AIModel, Message } from "./base";
+import { warnIfBrowser } from "../helpers/env-detection";
 
 export class AnthropicModel implements AIModel {
   private api: AxiosInstance;
   private baseUrl = "https://api.anthropic.com/v1";
 
   constructor(private apiKey: string) {
+    warnIfBrowser("Anthropic");
     this.api = axios.create({
       baseURL: this.baseUrl,
       headers: {
