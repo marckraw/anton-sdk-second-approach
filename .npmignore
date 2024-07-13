@@ -3,3 +3,4 @@ tests/
 rollup.config.mjs  
 tsconfig.json
 .idea
+dist/bin/*
